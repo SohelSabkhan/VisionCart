@@ -1,0 +1,382 @@
+{
+    "amul_darkchocolate_150g_110rs_back": [
+        110,
+        0.15
+    ],
+    "amul_darkchocolate_150g_110rs_front": [
+        110,
+        0.15
+    ],
+    "balaji_aloo_sev_400g_85rs_back": [
+        85,
+        0.4
+    ],
+    "balaji_aloo_sev_400g_85rs_front": [
+        85,
+        0.4
+    ],
+    "balaji_aloo_sev_400g_85rs_side": [
+        85,
+        0.4
+    ],
+    "balaji_ratlami_sev_400g_80rs_back": [
+        80,
+        0.4
+    ],
+    "balaji_ratlami_sev_400g_80rs_front": [
+        80,
+        0.4
+    ],
+    "balaji_ratlami_sev_400g_80rs_side": [
+        80,
+        0.4
+    ],
+    "balaji_wafers_chaatchaska_35g_10rs_back": [
+        10,
+        0.035
+    ],
+    "balaji_wafers_chaatchaska_35g_10rs_front": [
+        10,
+        0.035
+    ],
+    "balaji_wafers_masalamasti_35g_10rs_back": [
+        10,
+        0.035
+    ],
+    "balaji_wafers_masalamasti_35g_10rs_front": [
+        10,
+        0.035
+    ],
+    "balaji_wafers_simplysalted_35g_10rs_back": [
+        10,
+        0.035
+    ],
+    "balaji_wafers_simplysalted_35g_10rs_front": [
+        10,
+        0.035
+    ],
+    "balaji_wafers_tomatotwist_35g_10rs_back": [
+        10,
+        0.035
+    ],
+    "balaji_wafers_tomatotwist_35g_10rs_front": [
+        10,
+        0.035
+    ],
+    "britannia_marie_gold_250g_40rs_back": [
+        40,
+        0.25
+    ],
+    "britannia_marie_gold_250g_40rs_front": [
+        40,
+        0.25
+    ],
+    "britannia_marie_gold_250g_40rs_side": [
+        40,
+        0.25
+    ],
+    "cadbury_celebrations_113.8g_100rs_back": [
+        100,
+        0.114
+    ],
+    "cadbury_celebrations_113.8g_100rs_front": [
+        100,
+        0.114
+    ],
+    "closeup_150g_110rs_back": [
+        110,
+        0.15
+    ],
+    "closeup_150g_110rs_front": [
+        110,
+        0.15
+    ],
+    "closeup_150g_110rs_side": [
+        110,
+        0.15
+    ],
+    "colgate_strong_teeth_200g_135rs_back": [
+        135,
+        0.2
+    ],
+    "colgate_strong_teeth_200g_135rs_front": [
+        135,
+        0.2
+    ],
+    "colgate_strong_teeth_200g_135rs_side": [
+        135,
+        0.2
+    ],
+    "dark_fantasy_choco_fills_75g_40rs_back": [
+        40,
+        0.075
+    ],
+    "dark_fantasy_choco_fills_75g_40rs_front": [
+        40,
+        0.075
+    ],
+    "dark_fantasy_choco_fills_75g_40rs_side": [
+        40,
+        0.075
+    ],
+    "dove_shampoo_180ml_150rs_back": [
+        150,
+        0.18
+    ],
+    "dove_shampoo_180ml_150rs_front": [
+        150,
+        0.18
+    ],
+    "dove_soap_100-20g_65rs_back": [
+        65,
+        0.0
+    ],
+    "dove_soap_100-20g_65rs_front": [
+        65,
+        0.0
+    ],
+    "dove_soap_100-20g_65rs_side": [
+        65,
+        0.0
+    ],
+    "everest_chaat_masala_50g_44rs_back": [
+        44,
+        0.05
+    ],
+    "everest_chaat_masala_50g_44rs_front": [
+        44,
+        0.05
+    ],
+    "everest_garam_masala_50g_51rs_back": [
+        51,
+        0.05
+    ],
+    "everest_garam_masala_50g_51rs_front": [
+        51,
+        0.05
+    ],
+    "head_and_shoulders_340ml_499rs_back": [
+        499,
+        0.34
+    ],
+    "head_and_shoulders_340ml_499rs_front": [
+        499,
+        0.34
+    ],
+    "krack_jack_200g_40rs_back": [
+        40,
+        0.2
+    ],
+    "krack_jack_200g_40rs_front": [
+        40,
+        0.2
+    ],
+    "krack_jack_200g_40rs_side": [
+        40,
+        0.2
+    ],
+    "lakme_peach_moisturiser_200ml_399rs_back": [
+        399,
+        0.2
+    ],
+    "lakme_peach_moisturiser_200ml_399rs_front": [
+        399,
+        0.2
+    ],
+    "lifebuoy_125g_40rs_back": [
+        40,
+        0.125
+    ],
+    "lifebuoy_125g_40rs_front": [
+        40,
+        0.125
+    ],
+    "lifebuoy_125g_40rs_side": [
+        40,
+        0.125
+    ],
+    "liril_bodywash_750ml_425rs_back": [
+        425,
+        0.75
+    ],
+    "liril_bodywash_750ml_425rs_front": [
+        425,
+        0.75
+    ],
+    "lux_150g_80rs_back": [
+        80,
+        0.15
+    ],
+    "lux_150g_80rs_front": [
+        80,
+        0.15
+    ],
+    "lux_150g_80rs_side": [
+        80,
+        0.15
+    ],
+    "maggi_140g_28rs_back": [
+        28,
+        0.14
+    ],
+    "maggi_140g_28rs_front": [
+        28,
+        0.14
+    ],
+    "maggi_140g_28rs_side": [
+        28,
+        0.14
+    ],
+    "nescafe_coffee_45g_180rs_back": [
+        180,
+        0.045
+    ],
+    "nescafe_coffee_45g_180rs_front": [
+        180,
+        0.045
+    ],
+    "nescafe_coffee_45g_180rs_side": [
+        180,
+        0.045
+    ],
+    "patanjali_aloevera_gel_150ml_100rs_back": [
+        100,
+        0.15
+    ],
+    "patanjali_aloevera_gel_150ml_100rs_front": [
+        100,
+        0.15
+    ],
+    "patanjali_aloevera_gel_150ml_100rs_side": [
+        100,
+        0.15
+    ],
+    "pears_100-20g_54rs_back": [
+        54,
+        0.0
+    ],
+    "pears_100-20g_54rs_front": [
+        54,
+        0.0
+    ],
+    "pears_100-20g_54rs_side": [
+        54,
+        0.0
+    ],
+    "real_grape_juice_1l_125rs_cross": [
+        125,
+        1.0
+    ],
+    "real_grape_juice_1l_125rs_front": [
+        125,
+        1.0
+    ],
+    "real_grape_juice_1l_125rs_side": [
+        125,
+        1.0
+    ],
+    "rin_soap_250g_25rs_back": [
+        25,
+        0.25
+    ],
+    "rin_soap_250g_25rs_front": [
+        25,
+        0.25
+    ],
+    "rin_soap_250g_25rs_side": [
+        25,
+        0.25
+    ],
+    "shreeji_dabeli_masala_100g_45rs_back": [
+        45,
+        0.1
+    ],
+    "shreeji_dabeli_masala_100g_45rs_front": [
+        45,
+        0.1
+    ],
+    "shreeji_undhiyu_masala_50g_40rs_back": [
+        40,
+        0.05
+    ],
+    "shreeji_undhiyu_masala_50g_40rs_front": [
+        40,
+        0.05
+    ],
+    "surf_excel_1.5kg_235rs_back": [
+        235,
+        1.5
+    ],
+    "surf_excel_1.5kg_235rs_front": [
+        235,
+        1.5
+    ],
+    "surf_excel_1.5kg_235rs_side": [
+        235,
+        1.5
+    ],
+    "tata_salt_1kg_28rs_back": [
+        28,
+        1.0
+    ],
+    "tata_salt_1kg_28rs_front": [
+        28,
+        1.0
+    ],
+    "tresemme_black_580ml_755rs_back": [
+        755,
+        0.58
+    ],
+    "tresemme_black_580ml_755rs_front": [
+        755,
+        0.58
+    ],
+    "tresemme_black_580ml_755rs_side": [
+        755,
+        0.58
+    ],
+    "vaseline_aloe_fresh_200ml_210rs_back": [
+        210,
+        0.2
+    ],
+    "vaseline_aloe_fresh_200ml_210rs_front": [
+        210,
+        0.2
+    ],
+    "vaseline_aloe_fresh_200ml_210rs_side": [
+        210,
+        0.2
+    ],
+    "veg_hakka_noodles_140g_30rs_back": [
+        30,
+        0.14
+    ],
+    "veg_hakka_noodles_140g_30rs_front": [
+        30,
+        0.14
+    ],
+    "vicco_vajradanti_200g_137rs_back": [
+        137,
+        0.2
+    ],
+    "vicco_vajradanti_200g_137rs_front": [
+        137,
+        0.2
+    ],
+    "vicco_vajradanti_200g_137rs_side": [
+        137,
+        0.2
+    ],
+    "vim_bar_800g_86rs_back": [
+        86,
+        0.8
+    ],
+    "vim_bar_800g_86rs_front": [
+        86,
+        0.8
+    ],
+    "vim_bar_800g_86rs_side": [
+        86,
+        0.8
+    ]
+}

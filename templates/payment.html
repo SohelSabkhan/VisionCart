@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionCart - Payment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .payment-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .payment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-card h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .order-summary {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .order-summary h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-subtotal {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            margin-top: 10px;
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        .summary-discount {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            color: #10b981;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .coupon-badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            margin-top: 15px;
+            border-top: 2px solid #667eea;
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .payment-method {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-method:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .payment-method.selected {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        .payment-method-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .payment-method-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .payment-details {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .payment-details.active {
+            display: block;
+        }
+
+        .upi-section {
+            text-align: center;
+        }
+
+        .upi-qr {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .upi-qr img {
+            width: 250px;
+            height: 250px;
+        }
+
+        .upi-info {
+            color: #6b7280;
+            margin-top: 15px;
+        }
+
+        .cash-section, .card-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .cash-section .icon, .card-section .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .cash-section h3, .card-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .cash-section p, .card-section p {
+            color: #6b7280;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .card-input-group {
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        .card-input-group input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .card-input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-buttons button {
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-content">
+            <h1>VisionCart</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}">Back to Shopping</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="payment-container">
+        <div class="payment-card">
+            <h2>Payment</h2>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                {% for item in cart_items %}
+                <div class="summary-item">
+                    <span>{{ item.name }} × {{ item.quantity }}</span>
+                    <span>₹{{ item.total }}</span>
+                </div>
+                {% endfor %}
+                
+                {% if discount_amount and discount_amount > 0 %}
+                <div class="summary-subtotal">
+                    <span>Subtotal</span>
+                    <span>₹{{ (total_amount + discount_amount)|round(2) }}</span>
+                </div>
+                <div class="summary-discount">
+                    <span>
+                        Discount 
+                        {% if applied_coupon %}
+                        <span class="coupon-badge">{{ applied_coupon.coupon_code }}</span>
+                        {% endif %}
+                    </span>
+                    <span>- ₹{{ discount_amount|round(2) }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="summary-total">
+                    <span>Total Amount</span>
+                    <span>₹{{ total_amount }}</span>
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="payment-methods">
+                <div class="payment-method" data-method="cash">
+                    <div class="payment-method-icon">💵</div>
+                    <div class="payment-method-name">Cash</div>
+                </div>
+                <div class="payment-method" data-method="upi">
+                    <div class="payment-method-icon">📱</div>
+                    <div class="payment-method-name">UPI</div>
+                </div>
+                <div class="payment-method" data-method="card">
+                    <div class="payment-method-icon">💳</div>
+                    <div class="payment-method-name">Debit Card</div>
+                </div>
+            </div>
+
+            <!-- Payment Details Sections -->
+            
+            <!-- Cash Payment -->
+            <div id="cashDetails" class="payment-details">
+                <div class="cash-section">
+                    <div class="icon">💵</div>
+                    <h3>Cash Payment</h3>
+                    <p>Please proceed to the counter with your cart.<br>
+                    Our staff will assist you with the payment.</p>
+                    <p style="margin-top: 20px; font-size: 24px; font-weight: bold; color: #667eea;">
+                        Amount to Pay: ₹{{ total_amount }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- UPI Payment -->
+            <div id="upiDetails" class="payment-details">
+                <div class="upi-section">
+                    <h3>Scan QR Code to Pay</h3>
+                    <div class="upi-qr">
+                        <img id="upiQrCode" src="/payment-qr/{{ cart_id }}" alt="UPI QR Code">
+                    </div>
+                    <p class="upi-info">
+                        <strong>Amount: ₹{{ total_amount }}</strong><br>
+                        Scan this QR code with any UPI app to complete payment
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card Payment -->
+            <div id="cardDetails" class="payment-details">
+                <div class="card-section">
+                    <div class="icon">💳</div>
+                    <h3>Debit Card Payment</h3>
+                    <div class="card-input-group">
+                        <input type="text" placeholder="Card Number" maxlength="16">
+                        <input type="text" placeholder="Cardholder Name">
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" placeholder="MM/YY" maxlength="5" style="flex: 1;">
+                            <input type="text" placeholder="CVV" maxlength="3" style="flex: 1;">
+                        </div>
+                    </div>
+                    <p style="color: #6b7280; font-size: 14px; margin-top: 10px;">
+                        (Demo mode - No actual payment will be processed)
+                    </p>
+                    <p style="margin-top: 15px; font-size: 20px; font-weight: bold; color: #667eea;">
+                        Amount to Pay: ₹{{ total_amount }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="window.location.href='{{ url_for('home') }}'">Cancel</button>
+                <button id="completePaymentBtn" class="btn btn-success btn-lg" disabled>Complete Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedMethod = null;
+
+        // Payment method selection
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                // Remove previous selection
+                document.querySelectorAll('.payment-method').forEach(m => {
+                    m.classList.remove('selected');
+                });
+                
+                // Hide all payment details
+                document.querySelectorAll('.payment-details').forEach(detail => {
+                    detail.classList.remove('active');
+                });
+
+                // Select current method
+                this.classList.add('selected');
+                selectedMethod = this.dataset.method;
+
+                // Show corresponding payment details
+                document.getElementById(selectedMethod + 'Details').classList.add('active');
+
+                // Enable complete payment button
+                document.getElementById('completePaymentBtn').disabled = false;
+            });
+        });
+
+        // Complete payment
+        document.getElementById('completePaymentBtn').addEventListener('click', async function() {
+            if (!selectedMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+
+            const confirmMsg = selectedMethod === 'cash' 
+                ? 'Confirm cash payment at counter?' 
+                : `Confirm payment of ₹{{ total_amount }} via ${selectedMethod.toUpperCase()}?`;
+
+            if (confirm(confirmMsg)) {
+                try {
+                    const response = await fetch('/complete-payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            payment_method: selectedMethod,
+                            cart_id: '{{ cart_id }}'
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        let message = 'Payment successful! Thank you for shopping with VisionCart.';
+                        if (result.discount_saved > 0) {
+                            message += `\n\nYou saved ₹${result.discount_saved.toFixed(2)} with your coupon!`;
+                        }
+                        alert(message);
+                        window.location.href = '{{ url_for("home") }}';
+                    } else {
+                        alert(result.message || 'Payment failed');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error processing payment');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

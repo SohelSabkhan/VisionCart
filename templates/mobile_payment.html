@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionCart - Payment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .payment-display {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .logo {
+            color: #667eea;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .payment-icon {
+            font-size: 80px;
+            margin: 20px 0;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .payment-title {
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .amount-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .amount-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .amount-value {
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .discount-badge {
+            background: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .order-details {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .order-details h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+            color: #555;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            flex: 1;
+            text-transform: capitalize;
+        }
+
+        .item-quantity {
+            margin: 0 10px;
+            color: #6b7280;
+        }
+
+        .item-price {
+            font-weight: 600;
+        }
+
+        .payment-info {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 20px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        .cart-id {
+            color: #9ca3af;
+            font-size: 12px;
+            margin-top: 15px;
+            font-family: monospace;
+        }
+
+        .subtotal-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .discount-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            color: #10b981;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            margin-top: 8px;
+            border-top: 2px solid #e5e7eb;
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-display">
+        <div class="logo">VisionCart</div>
+        
+        <div class="payment-icon">💳</div>
+        
+        <div class="payment-title">Payment Required</div>
+        
+        <div class="amount-display">
+            <div class="amount-label">Total Amount</div>
+            <div class="amount-value">₹{{ total_amount }}</div>
+            {% if applied_coupon %}
+            <div class="discount-badge">
+                🎉 {{ applied_coupon.coupon_code }} Applied!
+            </div>
+            {% endif %}
+        </div>
+
+        {% if cart_items %}
+        <div class="order-details">
+            <h3>Order Items</h3>
+            {% for item in cart_items %}
+            <div class="order-item">
+                <span class="item-name">{{ item.name }}</span>
+                <span class="item-quantity">× {{ item.quantity }}</span>
+                <span class="item-price">₹{{ item.total }}</span>
+            </div>
+            {% endfor %}
+            
+            {% if discount_amount and discount_amount > 0 %}
+            <div class="subtotal-line">
+                <span>Subtotal:</span>
+                <span>₹{{ (total_amount + discount_amount)|round(2) }}</span>
+            </div>
+            <div class="discount-line">
+                <span>Discount:</span>
+                <span>- ₹{{ discount_amount|round(2) }}</span>
+            </div>
+            <div class="total-line">
+                <span>Final Total:</span>
+                <span>₹{{ total_amount }}</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="status-badge">⏳ Awaiting Payment</div>
+
+        <div class="payment-info">
+            Please complete the payment using your preferred UPI app.<br>
+            Do not close this page until payment is confirmed.
+        </div>
+
+        <div class="cart-id">Cart ID: {{ cart_id }}</div>
+    </div>
+</body>
+</html>

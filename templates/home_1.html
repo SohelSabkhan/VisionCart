@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionCart - Shopping</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .share-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            border-radius: 8px;
+            border: 2px solid #3b82f6;
+        }
+
+        [data-theme="dark"] .share-section {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            border-color: #60a5fa;
+        }
+
+        .share-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        [data-theme="dark"] .share-title {
+            color: #f9fafb;
+        }
+
+        .share-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .btn-share {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-share:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-telegram {
+            background: #0088cc;
+            color: white;
+        }
+
+        .btn-copy {
+            background: #6b7280;
+            color: white;
+        }
+
+        .share-icon {
+            font-size: 24px;
+        }
+
+        .share-label {
+            font-size: 11px;
+        }
+
+        .share-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .share-modal.active {
+            display: flex;
+        }
+
+        .share-modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .share-modal-content {
+            background: #1f2937;
+            color: #f9fafb;
+        }
+
+        .share-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .share-modal-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .share-modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .share-modal-close:hover {
+            color: #1f2937;
+        }
+
+        .share-link-box {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        [data-theme="dark"] .share-link-box {
+            background: #374151;
+        }
+
+        .share-preview {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        [data-theme="dark"] .share-preview {
+            background: #111827;
+        }
+
+        .share-preview-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .share-preview-items {
+            font-size: 13px;
+            line-height: 1.8;
+            color: #4b5563;
+        }
+
+        [data-theme="dark"] .share-preview-items {
+            color: #d1d5db;
+        }
+
+        .coupon-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+            border-radius: 8px;
+            border: 2px dashed #ef4444;
+        }
+
+        [data-theme="dark"] .coupon-section {
+            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+            border-color: #667eea;
+        }
+
+        .coupon-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .coupon-icon {
+            font-size: 24px;
+        }
+
+        .coupon-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        [data-theme="dark"] .coupon-title {
+            color: #f9fafb;
+        }
+
+        .coupon-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .coupon-input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .btn-apply-coupon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-apply-coupon:hover {
+            transform: translateY(-2px);
+        }
+
+        .coupon-applied {
+            background: #d1fae5;
+            padding: 12px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #10b981;
+        }
+
+        [data-theme="dark"] .coupon-applied {
+            background: #064e3b;
+            border-color: #10b981;
+        }
+
+        .coupon-applied-info {
+            flex: 1;
+        }
+
+        .coupon-code-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .coupon-savings {
+            font-size: 14px;
+            color: #065f46;
+            font-weight: 600;
+        }
+
+        [data-theme="dark"] .coupon-savings {
+            color: #6ee7b7;
+        }
+
+        .btn-remove-coupon {
+            background: #ef4444;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .cart-total-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        [data-theme="dark"] .cart-total-section {
+            border-top-color: #374151;
+        }
+
+        .cart-subtotal, .cart-discount {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .cart-discount {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .cart-final-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 10px;
+        }
+
+        .video-feed-container {
+            position: relative;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .video-feed-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .detection-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .detection-overlay.active {
+            background: rgba(76, 175, 80, 0.9);
+        }
+
+        .detection-overlay.error {
+            background: rgba(244, 67, 54, 0.9);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        .notification.success {
+            border-left: 4px solid #10b981;
+        }
+
+        .notification.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .notification.info {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .notification-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: #1f2937;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .notification-close:hover {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .notification.hiding {
+            animation: slideOut 0.3s ease-in forwards;
+        }
+
+        .rfid-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .rfid-section h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .info-text {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .rfid-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .rfid-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .rfid-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .rfid-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .rfid-status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .rfid-status.active {
+            display: block;
+        }
+
+        .rfid-status.scanning {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+
+        .rfid-status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .rfid-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .btn-rfid {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-rfid:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-rfid:active {
+            transform: translateY(0);
+        }
+
+        .btn-rfid:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .rfid-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-content">
+            <h1>VisionCart</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('history') }}">Order History</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="left-panel">
+            <div class="camera-section">
+                <h2>Camera Feed</h2>
+
+                <div class="video-feed-container">
+                    <img id="videoFeed" src="" alt="Camera feed" style="display: none;">
+                    <div id="cameraPlaceholder" style="background: #333; color: #fff; text-align: center; padding: 100px 20px; border-radius: 8px;">
+                        <p>📷 Click "Start Camera" to begin detection</p>
+                    </div>
+                    <div id="detectionOverlay" class="detection-overlay">
+                        🔴 Camera Stopped
+                    </div>
+                </div>
+
+                <div class="camera-controls">
+                    <button id="startCamera" class="btn btn-success">Start Camera</button>
+                    <button id="stopCamera" class="btn btn-danger" disabled>Stop Camera</button>
+                </div>
+            </div>
+
+            <div class="rfid-section">
+                <div class="rfid-icon">📡</div>
+                <h3>RFID Item Scanner</h3>
+                <p class="info-text">Scan item RFID tag to add to cart</p>
+                <div class="rfid-controls">
+                    <input type="text" id="rfidInput" class="rfid-input" placeholder="Place RFID tag near scanner..." autocomplete="off">
+                    <button id="scanRfidBtn" class="btn-rfid">Scan</button>
+                </div>
+                <div id="rfidStatus" class="rfid-status"></div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="cart-section">
+                <h2>Shopping Cart</h2>
+                <div class="cart-id">Cart ID: <span>{{ cart_id }}</span></div>
+
+                <div id="cartItems" class="cart-items"></div>
+
+                <div class="coupon-section">
+                    <div class="coupon-header">
+                        <span class="coupon-icon">🎟️</span>
+                        <span class="coupon-title">Have a Coupon?</span>
+                    </div>
+
+                    <div id="couponInputArea">
+                        <div class="coupon-input-group">
+                            <input type="text" id="couponInput" class="coupon-input" placeholder="Enter coupon code" maxlength="20">
+                            <button class="btn-apply-coupon" onclick="applyCoupon()">Apply</button>
+                        </div>
+                        <div style="font-size: 11px; color: #6b7280; margin-top: 5px;">
+                            💡 Try: WELCOME10, SAVE50, FIRST20, MEGA25
+                        </div>
+                    </div>
+
+                    <div id="couponAppliedArea" style="display: none;"></div>
+                </div>
+
+                <div class="share-section">
+                    <div class="share-title">
+                        <span>📤</span>
+                        <span>Share Cart</span>
+                    </div>
+                    <div class="share-buttons">
+                        <button class="btn-share btn-whatsapp" onclick="shareViaWhatsApp()">
+                            <img src="/static/images/whatsapp.png" 
+                                alt="WhatsApp" 
+                                class="share-icon" 
+                                width="50" height="50">
+                            <span class="share-label">WhatsApp</span>
+                        </button>
+                        <button class="btn-share btn-telegram" onclick="shareViaTelegram()">
+                            <img src="/static/images/telegram.png" 
+                                alt="Telegram" 
+                                class="share-icon" 
+                                width="50" height="50">
+                            <span class="share-label">Telegram</span>
+                        </button>
+                        <button class="btn-share btn-copy" onclick="copyShareLink()">
+                            <span class="share-icon">🔗</span>
+                            <span class="share-label">Copy Link</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="shareModal" class="share-modal">
+                    <div class="share-modal-content">
+                        <div class="share-modal-header">
+                            <span class="share-modal-title">📤 Share Your Cart</span>
+                            <button class="share-modal-close" onclick="closeShareModal()">×</button>
+                        </div>
+
+                        <div class="share-preview">
+                            <div class="share-preview-title">Cart Preview:</div>
+                            <div id="sharePreview" class="share-preview-items"></div>
+                        </div>
+
+                        <div class="share-link-box" id="shareLinkBox"></div>
+
+                        <div class="share-buttons">
+                            <button class="btn-share btn-whatsapp" onclick="shareViaWhatsApp()">
+                                <span class="share-icon">📱</span>
+                                <span class="share-label">WhatsApp</span>
+                            </button>
+                            <button class="btn-share btn-telegram" onclick="shareViaTelegram()">
+                                <span class="share-icon">✈️</span>
+                                <span class="share-label">Telegram</span>
+                            </button>
+                            <button class="btn-share btn-copy" onclick="copyShareLink()">
+                                <span class="share-icon">🔗</span>
+                                <span class="share-label">Copy Link</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cart-total-section">
+                    <div class="cart-subtotal">
+                        <span>Subtotal:</span>
+                        <span>₹<span id="subtotalAmount">0</span></span>
+                    </div>
+                    <div class="cart-discount" id="discountRow" style="display: none;">
+                        <span>Discount:</span>
+                        <span>- ₹<span id="discountAmount">0</span></span>
+                    </div>
+                    <div class="cart-final-total">
+                        <span>Total:</span>
+                        <span>₹<span id="totalAmount">0</span></span>
+                    </div>
+                </div>
+
+                <div class="cart-actions">
+                    <button id="checkoutBtn" class="btn btn-success btn-lg">Checkout</button>
+                    <button id="clearCartBtn" class="btn btn-secondary">Clear Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cameraActive = false;
+        let cartUpdateInterval = null;
+        let visibleItemsInterval = null;
+        let appliedCoupon = null;
+
+        function showNotification(type, title, message, duration = 3000) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+
+            const icons = {
+                success: '✓',
+                error: '✗',
+                info: 'ℹ'
+            };
+
+            notification.innerHTML = `
+                <div class="notification-icon">${icons[type] || 'ℹ'}</div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+                <button class="notification-close">×</button>
+            `;
+
+            document.body.appendChild(notification);
+
+            const closeBtn = notification.querySelector('.notification-close');
+            closeBtn.addEventListener('click', () => {
+                dismissNotification(notification);
+            });
+
+            setTimeout(() => {
+                dismissNotification(notification);
+            }, duration);
+        }
+
+        function dismissNotification(notification) {
+            notification.classList.add('hiding');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+
+        document.getElementById('startCamera').addEventListener('click', () => {
+            if (cameraActive) return;
+
+            const videoFeed = document.getElementById('videoFeed');
+            const placeholder = document.getElementById('cameraPlaceholder');
+            const overlay = document.getElementById('detectionOverlay');
+
+            videoFeed.src = '/video_feed';
+            videoFeed.style.display = 'block';
+            placeholder.style.display = 'none';
+
+            overlay.textContent = '🟢 Camera Active - Scanning...';
+            overlay.classList.add('active');
+
+            cameraActive = true;
+            document.getElementById('startCamera').disabled = true;
+            document.getElementById('stopCamera').disabled = false;
+
+            showNotification('success', 'Camera Started', 'Object detection is now active');
+
+            if (visibleItemsInterval) {
+                clearInterval(visibleItemsInterval);
+            }
+            visibleItemsInterval = setInterval(syncVisibleItems, 500);
+        });
+
+        document.getElementById('stopCamera').addEventListener('click', () => {
+            if (!cameraActive) return;
+
+            const videoFeed = document.getElementById('videoFeed');
+            const placeholder = document.getElementById('cameraPlaceholder');
+            const overlay = document.getElementById('detectionOverlay');
+
+            videoFeed.src = '';
+            videoFeed.style.display = 'none';
+            placeholder.style.display = 'block';
+
+            overlay.textContent = '🔴 Camera Stopped';
+            overlay.classList.remove('active');
+            overlay.classList.remove('error');
+
+            cameraActive = false;
+            document.getElementById('startCamera').disabled = false;
+            document.getElementById('stopCamera').disabled = true;
+
+            showNotification('info', 'Camera Stopped', 'Object detection disabled');
+
+            if (visibleItemsInterval) {
+                clearInterval(visibleItemsInterval);
+                visibleItemsInterval = null;
+            }
+
+            syncVisibleItems();
+        });
+
+        let previousCartItems = [];
+
+        async function syncVisibleItems() {
+            if (!cameraActive) {
+                try {
+                    await fetch('/update-visible-items', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ visible_items: [] })
+                    });
+                    updateCart();
+                } catch (error) {
+                    console.error('Error clearing visible items:', error);
+                }
+                return;
+            }
+
+            try {
+                const response = await fetch('/get-visible-items');
+                const data = await response.json();
+
+                const updateResponse = await fetch('/update-visible-items', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ visible_items: data.visible_items })
+                });
+
+                if (updateResponse.ok) {
+                    const result = await updateResponse.json();
+
+                    if (result.success && result.cart) {
+                        checkCartChanges(result.cart);
+                    }
+
+                    updateCart();
+                }
+            } catch (error) {
+                console.error('Error syncing visible items:', error);
+            }
+        }
+
+        function checkCartChanges(currentCart) {
+            const previousMap = {};
+            previousCartItems.forEach(item => {
+                previousMap[item.name] = item.quantity;
+            });
+
+            const currentMap = {};
+            currentCart.forEach(item => {
+                currentMap[item.name] = item.quantity;
+            });
+
+            currentCart.forEach(item => {
+                if (!previousMap[item.name]) {
+                    showNotification('success', 'Item Added', `${item.name} - ₹${item.price} detected and added`);
+                }
+            });
+
+            previousCartItems.forEach(item => {
+                if (!currentMap[item.name]) {
+                    showNotification('info', 'Item Removed', `${item.name} is no longer visible`);
+                }
+            });
+
+            previousCartItems = JSON.parse(JSON.stringify(currentCart));
+        }
+
+        let rfidScanning = false;
+
+        document.getElementById('scanRfidBtn').addEventListener('click', async () => {
+            const rfidInput = document.getElementById('rfidInput');
+            const itemTag = rfidInput.value.trim().toLowerCase();
+
+            if (!itemTag) {
+                showNotification('error', 'Invalid Input', 'Please enter an RFID tag or item name');
+                return;
+            }
+
+            const statusDiv = document.getElementById('rfidStatus');
+            statusDiv.className = 'rfid-status scanning active';
+            statusDiv.textContent = '📡 Scanning RFID tag...';
+
+            document.getElementById('scanRfidBtn').disabled = true;
+
+            try {
+                const response = await fetch('/detect', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ item: itemTag })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    statusDiv.className = 'rfid-status success active';
+                    statusDiv.textContent = `✓ Item detected: ${result.item}`;
+
+                    showNotification('success', 'Item Added', `${result.item} - ₹${result.price} added to cart`);
+
+                    rfidInput.value = '';
+                    updateCart();
+
+                    setTimeout(() => {
+                        statusDiv.classList.remove('active');
+                    }, 3000);
+                } else {
+                    statusDiv.className = 'rfid-status error active';
+                    statusDiv.textContent = `✗ ${result.message}`;
+
+                    showNotification('error', 'Item Not Found', result.message);
+
+                    setTimeout(() => {
+                        statusDiv.classList.remove('active');
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                statusDiv.className = 'rfid-status error active';
+                statusDiv.textContent = '✗ Error scanning RFID tag';
+
+                showNotification('error', 'Scan Failed', 'Error processing RFID tag');
+
+                setTimeout(() => {
+                    statusDiv.classList.remove('active');
+                }, 3000);
+            } finally {
+                document.getElementById('scanRfidBtn').disabled = false;
+            }
+        });
+
+        document.getElementById('rfidInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('scanRfidBtn').click();
+            }
+        });
+
+        document.getElementById('rfidInput').addEventListener('blur', () => {
+            setTimeout(() => {
+                if (!document.querySelector('.notification')) {
+                    document.getElementById('rfidInput').focus();
+                }
+            }, 100);
+        });
+
+        async function updateCart() {
+        try {
+            const response = await fetch('/get-cart');
+            const data = await response.json();
+
+            const cartItemsDiv = document.getElementById('cartItems');
+            cartItemsDiv.innerHTML = '';
+
+            if (data.cart_items.length === 0) {
+                cartItemsDiv.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
+                
+                // Clear coupon display if cart is empty
+                if (appliedCoupon) {
+                    appliedCoupon = null;
+                    document.getElementById('couponInputArea').style.display = 'block';
+                    document.getElementById('couponAppliedArea').style.display = 'none';
+                    document.getElementById('couponInput').value = '';
+                }
+            } else {
+                data.cart_items.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'cart-item';
+                    const weightInfo = item.weight ? ` (${item.weight}kg)` : '';
+                    itemDiv.innerHTML = `
+                        <div class="item-info">
+                            <span class="item-name">${item.name}${weightInfo}</span>
+                            <span class="item-details">₹${item.price} × ${item.quantity} = ₹${item.total}</span>
+                        </div>
+                        <button class="btn-remove" onclick="removeItem('${item.name}')">Remove</button>
+                    `;
+                    cartItemsDiv.appendChild(itemDiv);
+                });
+            }
+
+
+        async function removeItem(itemName) {
+            try {
+                const response = await fetch('/remove-item', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ item_name: itemName })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('success', 'Item Removed', `${itemName} removed from cart`);
+                    updateCart();
+                } else {
+                    showNotification('error', 'Remove Failed', 'Error removing item from cart');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('error', 'Remove Failed', 'Error removing item from cart');
+            }
+        }
+
+        document.getElementById('subtotalAmount').textContent = data.cart_total.toFixed(2);
+
+                if (data.applied_coupon) {
+                    appliedCoupon = data.applied_coupon;
+                    displayAppliedCoupon(data.applied_coupon);
+                    document.getElementById('discountRow').style.display = 'flex';
+                    document.getElementById('discountAmount').textContent = data.applied_coupon.discount_amount.toFixed(2);
+                    document.getElementById('totalAmount').textContent = data.applied_coupon.final_total.toFixed(2);
+                } else {
+                    appliedCoupon = null;
+                    document.getElementById('couponInputArea').style.display = 'block';
+                    document.getElementById('couponAppliedArea').style.display = 'none';
+                    document.getElementById('discountRow').style.display = 'none';
+                    document.getElementById('totalAmount').textContent = data.cart_total.toFixed(2);
+                }
+            } catch (error) {
+                console.error('Error updating cart:', error);
+            }
+        }
+
+
+        document.getElementById('checkoutBtn').addEventListener('click', async () => {
+            const cartItems = document.getElementById('cartItems').children;
+            if (cartItems.length === 0 || cartItems[0].classList.contains('empty-cart')) {
+                showNotification('error', 'Empty Cart', 'Add items to cart before checkout');
+                return;
+            }
+
+            // Stop camera before checkout
+            if (cameraActive) {
+                document.getElementById('stopCamera').click();
+            }
+
+            // Navigate to checkout page (which will show the correct discounted total)
+            window.location.href = '/checkout';
+        });
+
+        document.getElementById('clearCartBtn').addEventListener('click', async () => {
+            const cartItems = document.getElementById('cartItems').children;
+            if (cartItems.length === 0 || cartItems[0].classList.contains('empty-cart')) {
+                showNotification('info', 'Cart Empty', 'Cart is already empty');
+                return;
+            }
+
+            if (confirm('Clear all items from cart?')) {
+                // If there's an applied coupon, remove it first
+                if (appliedCoupon) {
+                    await removeCoupon();
+                }
+                
+                showNotification('info', 'Cart Cleared', 'All items removed from cart');
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
+            }
+        });
+
+        async function applyCoupon() {
+            const couponInput = document.getElementById('couponInput');
+            const couponCode = couponInput.value.trim().toUpperCase();
+
+            if (!couponCode) {
+                showNotification('error', 'Invalid Coupon', 'Please enter a coupon code');
+                return;
+            }
+
+            try {
+                const response = await fetch('/validate-coupon', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ coupon_code: couponCode })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    appliedCoupon = result;
+                    showNotification('success', 'Coupon Applied!', result.message);
+                    displayAppliedCoupon(result);
+                    updateCart();
+                } else {
+                    showNotification('error', 'Invalid Coupon', result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('error', 'Error', 'Failed to apply coupon');
+            }
+        }
+
+        async function removeCoupon() {
+            try {
+                const response = await fetch('/remove-coupon', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    appliedCoupon = null;
+                    showNotification('info', 'Coupon Removed', 'Coupon has been removed');
+                    document.getElementById('couponInputArea').style.display = 'block';
+                    document.getElementById('couponAppliedArea').style.display = 'none';
+                    document.getElementById('couponInput').value = '';
+                    updateCart();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('error', 'Error', 'Failed to remove coupon');
+            }
+        }
+
+        function displayAppliedCoupon(coupon) {
+            document.getElementById('couponInputArea').style.display = 'none';
+            const appliedArea = document.getElementById('couponAppliedArea');
+            appliedArea.style.display = 'block';
+            appliedArea.innerHTML = `
+                <div class="coupon-applied">
+                    <div class="coupon-applied-info">
+                        <div class="coupon-code-badge">${coupon.coupon_code}</div>
+                        <div class="coupon-savings">🎉 You saved ₹${coupon.discount_amount.toFixed(2)}!</div>
+                    </div>
+                    <button class="btn-remove-coupon" onclick="removeCoupon()">Remove</button>
+                </div>
+            `;
+        }
+
+        function generateShareMessage() {
+            const cartItems = document.querySelectorAll('.cart-item');
+
+            if (cartItems.length === 0 || cartItems[0].classList.contains('empty-cart')) {
+                showNotification('error', 'Empty Cart', 'Add items to cart before sharing');
+                return null;
+            }
+
+            let message = '🛒 *VisionCart Shopping List*\n\n';
+
+            cartItems.forEach((item, index) => {
+                const itemName = item.querySelector('.item-name').textContent;
+                const itemDetails = item.querySelector('.item-details').textContent;
+                message += `${index + 1}. ${itemName}\n   ${itemDetails}\n\n`;
+            });
+
+            const totalAmount = document.getElementById('totalAmount').textContent;
+            const discountRow = document.getElementById('discountRow');
+
+            if (discountRow.style.display !== 'none') {
+                const subtotal = document.getElementById('subtotalAmount').textContent;
+                const discount = document.getElementById('discountAmount').textContent;
+                message += `Subtotal: ₹${subtotal}\n`;
+                message += `Discount: -₹${discount}\n`;
+                message += `*Total: ₹${totalAmount}*\n\n`;
+            } else {
+                message += `*Total: ₹${totalAmount}*\n\n`;
+            }
+
+            message += '🌐 Shop at VisionCart';
+
+            return message;
+        }
+
+        function shareViaWhatsApp() {
+            const message = generateShareMessage();
+            if (!message) return;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+
+            window.open(whatsappUrl, '_blank');
+            showNotification('success', 'Opening WhatsApp', 'Share your cart with friends!');
+        }
+
+        function shareViaTelegram() {
+            const message = generateShareMessage();
+            if (!message) return;
+
+            const encodedMessage = encodeURIComponent(message);
+            const telegramUrl = `https://t.me/share/url?text=${encodedMessage}`;
+
+            window.open(telegramUrl, '_blank');
+            showNotification('success', 'Opening Telegram', 'Share your cart with friends!');
+        }
+
+        function copyShareLink() {
+            const message = generateShareMessage();
+            if (!message) return;
+
+            navigator.clipboard.writeText(message).then(() => {
+                showNotification('success', 'Copied!', 'Cart details copied to clipboard');
+            }).catch(err => {
+                const textArea = document.createElement('textarea');
+                textArea.value = message;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showNotification('success', 'Copied!', 'Cart details copied to clipboard');
+                } catch (err) {
+                    showNotification('error', 'Copy Failed', 'Please try again');
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        function showShareModal() {
+            const message = generateShareMessage();
+            if (!message) return;
+
+            const preview = message.replace(/\*/g, '').replace(/\n/g, '<br>');
+            document.getElementById('sharePreview').innerHTML = preview;
+            document.getElementById('shareLinkBox').textContent = message;
+
+            document.getElementById('shareModal').classList.add('active');
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.remove('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const couponInput = document.getElementById('couponInput');
+            if (couponInput) {
+                couponInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        applyCoupon();
+                    }
+                });
+            }
+
+            const modal = document.getElementById('shareModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeShareModal();
+                    }
+                });
+            }
+
+            updateCart();
+        });
+    </script>
+
+    <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        🌙
+    </button>
+
+    <script src="{{ url_for('static', filename='js/dark-mode.js') }}"></script>
+</body>
+</html>

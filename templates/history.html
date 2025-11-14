@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionCart - Order History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-content">
+            <h1>VisionCart</h1>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}">Back to Shopping</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="history-container">
+        <h2>Order History</h2>
+
+        {% if carts %}
+        <div class="history-list">
+            {% for cart in carts %}
+            <div class="history-card">
+                <div class="history-header">
+                    <div>
+                        <h3>Cart ID: {{ cart.cart_id }}</h3>
+                        <p class="date">{{ cart.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                    </div>
+                    <div class="history-total">
+                        <span class="total-label">Total:</span>
+                        <span class="total-amount">₹{{ cart.total_amount }}</span>
+                    </div>
+                </div>
+
+                <div class="history-items">
+                    <h4>Items:</h4>
+                    <ul>
+                        {% for item in cart.items %}
+                        <li>
+                            <span class="item-name">{{ item.name }}</span>
+                            <span class="item-quantity">× {{ item.quantity }}</span>
+                            <span class="item-price">₹{{ item.total }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-history">
+            <p>No orders yet. Start shopping to see your order history!</p>
+            <a href="{{ url_for('home') }}" class="btn btn-primary">Start Shopping</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
